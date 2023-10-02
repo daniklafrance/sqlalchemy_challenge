@@ -90,18 +90,14 @@ def tobs():
     latest_date = dt.date(2017, 8, 23)
     query_date = latest_date - dt.timedelta(days=366)
 
-    precipitation_data = session.query(measurement.date, measurement.prcp).\
-        filter(measurement.date > query_date).\
-        order_by(measurement.date).all()
+    temp_obs = session.query(measurement.tobs).\
+    filter(measurement.station == "USC00519281").\
+    filter(measurement.date > query_date).\
+    order_by(measurement.station).all()
     
-    prec_data = []
-    for date, prcp in precipitation_data:
-        prec_data_item = {}
-        prec_data_item["date"] = date
-        prec_data_item["prcp"] = prcp
-        prec_data.append(prec_data_item) 
-    
-    return jsonify(prec_data
+    temp_obs_list = list(np.ravel(temp_obs))
+
+    return jsonify(temp_obs_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
