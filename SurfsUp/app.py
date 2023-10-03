@@ -104,7 +104,7 @@ def start(start):
 
     start = dt.timedelta(days=0)
 
-    start_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
+    start_query = session.query(func.min(measurement.tobs),func.avg(measurement.tobs),func.max(measurement.tobs)).\
         filter(measurement.date >= start).all()
     
     start_data = []
@@ -123,7 +123,7 @@ def startend(start,end):
     start = dt.timedelta(days=0)
     end = dt.timedelta(days=0)
 
-    startend_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
+    startend_query = session.query(func.min(measurement.tobs),func.avg(measurement.tobs),func.max(measurement.tobs)).\
         filter(measurement.date >= start).filter(measurement.date <= end).all()
     
     startend_data = []
