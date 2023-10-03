@@ -44,8 +44,8 @@ def welcome():
         f"Precipitation (Last 12 months): /api/v1.0/precipitation<br/>"
         f"Stations: /api/v1.0/stations<br/>"
         f"Temperature (Last 12 months): /api/v1.0/tobs<br/>"
-        f"Temperature from start date: /api/v1.0/[yyyy-mm-dd]<br/>"
-        f"Temperature from start to end date: /api/v1.0/[yyyy-mm-dd/yyyy-mm-dd]"
+        f"Temperature from start date: /api/v1.0/yyyy-mm-dd<br/>"
+        f"Temperature from start to end date: /api/v1.0/yyyy-mm-dd/yyyy-mm-dd"
     )
 
 @app.route("/api/v1.0/precipitation")
@@ -102,7 +102,9 @@ def tobs():
 @app.route("/api/v1.0/<start>")
 def start(start):
 
-    start = dt.timedelta(days=0)
+    start = dt.datetime.strptime(start, "%Y-%m-%d")
+
+    print(start)
 
     start_query = session.query(func.min(measurement.tobs),func.avg(measurement.tobs),func.max(measurement.tobs)).\
         filter(measurement.date >= start).all()
@@ -120,11 +122,15 @@ def start(start):
 @app.route("/api/v1.0/<start>/<end>")
 def startend(start,end):
     
-    start = dt.timedelta(days=0)
-    end = dt.timedelta(days=0)
+    start = dt.datetime.strptime(start, "%Y-%m-%d")
+    end = dt.datetime.strptime(end, "%Y-%m-%d")
+
+    print(start)
+    print(end)
 
     startend_query = session.query(func.min(measurement.tobs),func.avg(measurement.tobs),func.max(measurement.tobs)).\
-        filter(measurement.date >= start).filter(measurement.date <= end).all()
+        filter(measurement.date >= start).\
+        filter(measurement.date <= end).all()
     
     startend_data = []
     for min,avg,max in startend_query:
