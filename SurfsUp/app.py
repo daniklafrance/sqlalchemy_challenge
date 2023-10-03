@@ -120,8 +120,8 @@ def start(start):
 @app.route("/api/v1.0/<start>/<end>")
 def startend(start,end):
     
-    #start = dt.timedelta(days=0)
-    #end = dt.timedelta(days=0)
+    start = dt.timedelta(days=0)
+    end = dt.timedelta(days=0)
 
     startend_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
         filter(measurement.date >= start).filter(measurement.date <= end).all()
