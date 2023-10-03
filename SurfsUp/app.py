@@ -41,11 +41,11 @@ def welcome():
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
-        f"/api/v1.0/precipitation<br/>"
-        f"/api/v1.0/stations<br/>"
-        f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
-        f"/api/v1.0/<start>/<end>"
+        f"Precipitation (Last 12 months): /api/v1.0/precipitation<br/>"
+        f"Stations: /api/v1.0/stations<br/>"
+        f"Temperature (Last 12 months): /api/v1.0/tobs<br/>"
+        f"Temperature from start date: /api/v1.0/[yyyy-mm-dd]<br/>"
+        f"Temperature from start to end date: /api/v1.0/[yyyy-mm-dd/yyyy-mm-dd]"
     )
 
 @app.route("/api/v1.0/precipitation")
@@ -99,7 +99,44 @@ def tobs():
 
     return jsonify(temp_obs_list)
 
+@app.route("/api/v1.0/<start>")
+def start(start):
+
+    start = dt.timedelta(days=0)
+
+    start_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
+        filter(measurement.date >= start).all()
+    
+    start_data = []
+    for min,avg,max in start_query:
+        data_item = {}
+        data_item["min"] = min
+        data_item["avg"] = avg
+        data_item["max"] = max
+        start_data.append(data_item)
+
+    return jsonify(start_data) 
+
+@app.route("/api/v1.0/<start>/<end>")
+def startend(start,end):
+    
+    #start = dt.timedelta(days=0)
+    #end = dt.timedelta(days=0)
+
+    startend_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
+        filter(measurement.date >= start).filter(measurement.date <= end).all()
+    
+    startend_data = []
+    for min,avg,max in startend_query:
+        data_item = {}
+        data_item["min"] = min
+        data_item["avg"] = avg
+        data_item["max"] = max
+        startend_data.append(data_item)
+
+    return jsonify(startend_data)
+
+session.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-    session.close()
