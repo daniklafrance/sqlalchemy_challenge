@@ -9,6 +9,7 @@ Congratulations! You've decided to treat yourself to a long holiday vacation in 
 ### Dependencies
 
 #### For APP.PY file
+
 * import numpy as np
 * import datetime as dt
 * import sqlalchemy
@@ -18,6 +19,7 @@ Congratulations! You've decided to treat yourself to a long holiday vacation in 
 * from flask import Flask, jsonify
 
 #### Fot CLIMATE.IPYNB file
+
 * %matplotlib inline
 * from matplotlib import style
 * style.use('fivethirtyeight')
